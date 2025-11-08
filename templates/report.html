@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportar Incendio{% endblock %}
+
+{% block content %}
+    <h1>Reportar Incendio</h1>
+    <form method="POST" action="{{ url_for('report') }}">
+        <label for="ranger_name">Nombre del Guardabosque</label>
+        <input type="text" id="ranger_name" name="ranger_name" required>
+        <label for="report_time">Hora del Reporte</label>
+        <input type="text" id="report_time" name="report_time" required>
+        <label for="report_date">Fecha del Reporte</label>
+        <input type="text" id="report_date" name="report_date" required>
+        <label for="google_maps_link">Link de Google Maps</label>
+        <input type="text" id="google_maps_link" name="google_maps_link" required>
+        <label for="description">Descripción</label>
+        <textarea id="description" name="description"></textarea>
+        <button type="submit">Reportar</button>
+    </form>
+{% endblock %}

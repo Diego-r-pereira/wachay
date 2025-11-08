@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Landing Page{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1>Detección de Incendios Forestales</h1>
+        <p>Reporta incendios forestales de forma rápida y sencilla.</p>
+        <a href="#" class="btn-special">Reportar Incendio</a>
+    </section>
+
+    <section class="problem-solution">
+        <h2>El Desafío de los Incendios Forestales</h2>
+        <p>Los incendios forestales representan una amenaza creciente para nuestros ecosistemas y comunidades. WACHAY ofrece una solución innovadora para la detección temprana y el reporte eficiente de estos desastres.</p>
+    </section>
+
+    <section class="features">
+        <h2>Tecnologías y Características</h2>
+        <ul>
+            <li>Detección de incendios mediante IA</li>
+            <li>Reportes manuales geolocalizados</li>
+            <li>Alertas por WhatsApp y Telegram</li>
+            <li>Plataforma web intuitiva y fácil de usar</li>
+        </ul>
+    </section>
+
+    <section class="latest-report">
+        <h2>Último Reporte</h2>
+        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="Último reporte">
+        <p>Incendio detectado en el Parque Nacional Madidi.</p>
+    </section>
+
+    <section class="academic-project">
+        <h2>Proyecto Académico</h2>
+        <p>Este proyecto es parte de un trabajo de grado de la Universidad Franz Tamayo, Sede La Paz.</p>
+        <ul>
+            <li><strong>Universidad:</strong> Universidad Franz Tamayo</li>
+            <li><strong>Carrera:</strong> Ingeniería de Sistemas</li>
+            <li><strong>Estudiante:</strong> [Tu Nombre]</li>
+            <li><strong>Tutor:</strong> [Nombre del Tutor]</li>
+        </ul>
+    </section>
+
+    <section class="emergency-contact">
+        <h2>Contacto de Emergencia</h2>
+        <p>En caso de emergencia, contacta a las siguientes instituciones:</p>
+        <ul>
+            <li>Bomberos: 119</li>
+            <li>Defensa Civil: 110</li>
+        </ul>
+    </section>
