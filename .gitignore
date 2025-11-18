@@ -1,0 +1,143 @@
+# ============================================
+# ARCHIVOS DE ENTORNO Y CONFIGURACIÓN SENSIBLE
+# ============================================
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+.env.development
+
+# Configuración sensible
+config.py
+fireSet.py
+reset.txt
+
+# Archivos de prompt e instrucciones
+prompt.md
+PROJECT_DETAILS.md
+
+
+# ============================================
+# ENTORNOS VIRTUALES PYTHON
+# ============================================
+.venv/
+venv/
+env/
+ENV/
+virtualenv/
+
+
+# ============================================
+# BYTECODE Y CACHÉ DE PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+
+# ============================================
+# ARCHIVOS DE IDE/EDITORES
+# ============================================
+# PyCharm/IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Otros editores
+*.swp
+*.swo
+*~
+
+
+# ============================================
+# NOTEBOOKS Y DATOS TEMPORALES
+# ============================================
+# Notebooks (excepto si quieres versionarlos)
+*.ipynb
+model.google_colab.ipynb
+
+# Checkpoints de notebooks
+.ipynb_checkpoints/
+
+
+# ============================================
+# INSTANCIAS Y DATOS LOCALES
+# ============================================
+# Instancia de Flask (base de datos local, etc.)
+instance/
+
+
+# ============================================
+# MODELOS ENTRENADOS Y DATOS PESADOS
+# ============================================
+# Modelos de ML (si son grandes, mejor subirlos aparte)
+models/
+training_scripts/
+
+# Assets grandes (si son estáticos pesados)
+assets/
+
+
+# ============================================
+# ARCHIVOS DEL SISTEMA
+# ============================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+
+# ============================================
+# LOGS Y ARCHIVOS TEMPORALES
+# ============================================
+*.log
+logs/
+
+
+# ============================================
+# DISTRIBUCIONES Y PAQUETES
+# ============================================
+# Distribuciones/instalaciones de Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+
+# ============================================
+# TESTING Y COVERAGE
+# ============================================
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.cache

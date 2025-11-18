@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Report - Wachay{% endblock %}
+
+{% block content %}
+<section class="edit-report section">
+    <div class="container">
+        <h2 class="section__title">Edit Report #{{ report.id }}</h2>
+        <form action="{{ url_for('update_report', report_id=report.id) }}" method="POST">
+            <div class="form-group">
+                <label for="ranger_name">Ranger Name:</label>
+                <input type="text" id="ranger_name" name="ranger_name" class="form-control" value="{{ report.ranger_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="report_date">Report Date:</label>
+                <input type="date" id="report_date" name="report_date" class="form-control" value="{{ report.report_date.strftime('%Y-%m-%d') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="report_time">Report Time:</label>
+                <input type="time" id="report_time" name="report_time" class="form-control" value="{{ report.report_time.strftime('%H:%M') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="google_maps_link">Google Maps Link:</label>
+                <input type="url" id="google_maps_link" name="google_maps_link" class="form-control" value="{{ report.google_maps_link }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" class="form-control" rows="5">{{ report.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="Pending" {% if report.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Sent" {% if report.status == 'Sent' %}selected{% endif %}>Sent</option>
+                    <option value="Partially Sent" {% if report.status == 'Partially Sent' %}selected{% endif %}>Partially Sent</option>
+                    <option value="Failed" {% if report.status == 'Failed' %}selected{% endif %}>Failed</option>
+                </select>
+            </div>
+            <button type="submit" class="button">Update Report</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

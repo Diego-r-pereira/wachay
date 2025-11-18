@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/fire-line.svg') }}" type="image/x-icon">
+
+    <!--=============== REMIXICONS ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!--=============== SWIPER CSS ===============-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+
+    <title>{% block title %}WACHAY{% endblock %}</title>
+</head>
+<body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="{{ url_for('index') }}" class="nav__logo">
+                <i class="ri-fire-fill"></i> WACHAY
+            </a>
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li>
+                        <a href="{{ url_for('index') }}" class="nav__link active-link">Home</a>
+                    </li>
+                    <li>
+{#                        <a href="#about" class="nav__link">About us</a>#}
+                    </li>
+                    <li>
+                        <a href="#contact" class="nav__link">Contact</a>
+                    </li>
+                <div class="nav__buttons">
+                    {% if 'user_id' in session %}
+                        {% if session['role'] == 'admin' %}
+                            <li>
+                                <a href="{{ url_for('admin_dashboard') }}" class="nav__link click">Admin</a>
+                            </li>
+                        {% elif session['role'] == 'ranger' %}
+                            <li>
+                                <a href="{{ url_for('ranger_dashboard') }}" class="nav__link click">Monitoring</a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <a href="{{ url_for('logout') }}" class="nav__link click">Logout</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ url_for('login') }}" class="nav__link click">Login</a>
+                        </li>
+                    {% endif %}
+                </div>
+                </ul>
+
+                <!-- Close button-->
+                <div class="nav__close" id="nav-close">
+                    <i class="ri-close-large-line"></i>
+                </div>
+            </div>
+
+            <div class="nav__buttons">
+                <!-- Theme button -->
+                <i class="ri-moon-fill nav__theme" id="theme-button"></i>
+
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!--==================== FOOTER ====================-->
+    <footer class="footer">
+        <div class="footer__container container grid">
+            <a href="{{ url_for('index') }}" class="footer__logo">
+                <i class="ri-fire-fill"></i> WACHAY
+            </a>
+            <div class="footer__links">
+                <a href="#home" class="footer__link">Home</a>
+                <a href="#about" class="footer__link">About Us</a>
+                <a href="#prices" class="footer__link">Info</a> {# This will be removed or changed later #}
+            </div>
+            <div class="footer__social">
+                <a href="https://www.facebook.com/BomberosVoluntariosGeos" target="_blank" class="footer__social-link">
+                    <i class="ri-facebook-circle-fill"></i>
+                </a>
+                <a href="https://www.instagram.com/bomberos.geos/" target="_blank" class="footer__social-link">
+                    <i class="ri-instagram-fill"></i>
+                </a>
+                <a href="twitter.com/" target="_blank" class="footer__social-link">
+                    <i class="ri-twitter-x-line"></i>
+                </a>
+                <a href="https://www.youtube.com/@COORDINACIONGEOSCBBA" target="_blank" class="footer__social-link">
+                    <i class="ri-youtube-fill"></i>
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=59161561515&text=Hello, more information!" target="_blank" class="footer__social-link">
+                    <i class="ri-whatsapp-fill"></i>
+                </a>
+            </div>
+        </div>
+        <span class="footer__copy">&#169; All Rights Reserved By WACHAY</span>
+    </footer>
+
+    <!--========== SCROLL UP ==========-->
+    <a href="#" class="scrollup" id="scroll-up">
+        <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!--=============== SCROLLREVEAL ===============-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js"></script>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

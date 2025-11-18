@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Ranger Dashboard{% endblock %}
+
+{% block content %}
+<section class="ranger-dashboard section">
+    <div class="monitoring_container">
+        <p class="monitoring__description">Welcome, {{ ranger_name }}! Here you can monitor and report incidents.</p>
+
+        <div class="carousel-container">
+            <h3 class="monitoring_carousel_title">Image Of Fires</h3>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    {% for i in range(1, 20) %} {# Assuming 19 images in carousel folder #}
+                    <article class="swiper-slide monitoring">
+                        <img src="{{ url_for('static', filename='img/carousel/' + i|string + '.jpg') }}" alt="Carousel Image {{ i }}">
+                        <div class="carousel-legend">
+                            <p></p>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+{#            <div class="swiper-pagination pagination_monitoring"></div>#}
+        </div>
+
+        <div class="detect_container">
+            <h3 class="detect_title">Upload your Image to TEST!</h3>
+            <form action="{{ url_for('detect_fire') }}" method="POST" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="fire_image" class="detect_label">Upload Image:</label>
+                    <div class="file-input-container">
+                        <input type="file" id="fire_image" name="image" accept="image/*" class="file-input" required>
+                        <label for="fire_image" class="file-input-label">
+                            <br>
+                            <span class="file-input-text"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="button_detect">Detect Fire</button>
+            </form>
+        </div>
+
+        <div class="detect_container manual_report">
+            <h3 class="detect_title">Manual Report</h3>
+            <form action="{{ url_for('submit_report') }}" method="POST" class="report-form">
+                <input type="hidden" id="ranger_name" name="ranger_name" value="{{ ranger_name }}" required>
+
+                <div class="form-group">
+                    <label for="report_time">Report Time:</label>
+                    <input type="time" id="report_time" name="report_time" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="report_date">Report Date:</label>
+                    <input type="date" id="report_date" name="report_date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="google_maps_link">Google Maps Link:</label>
+                    <input type="url" id="google_maps_link" name="google_maps_link" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="button_detect">Submit Report</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Carousel Swiper
+    var swiper = new Swiper('.mySwiper', {
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+    function predict(swiperInstance) {
+        var activeSlide = swiperInstance.slides[swiperInstance.activeIndex];
+        var legend = activeSlide.querySelector('.carousel-legend p');
+        var img = activeSlide.querySelector('img');
+        var imgSrc = img.src;
+        var imageName = imgSrc.split('/').pop();
+
+        legend.textContent = 'Processing...';
+
+        fetch('{{ url_for("predict_carousel_image") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ image_name: imageName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.prediction) {
+                legend.textContent = data.prediction;
+            } else {
+                legend.textContent = data.error || 'Error';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            legend.textContent = 'Prediction failed';
+        });
+    }
+
+    swiper.on('slideChange', function () {
+        predict(swiper);
+    });
+
+    if (swiper.slides.length > 0) {
+        predict(swiper);
+    }
+
+    // Fire Detection Form
+    const uploadForm = document.querySelector('.upload-form');
+    const fileInput = document.getElementById('fire_image');
+    const fileInputText = document.querySelector('.file-input-text');
+
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            fileInputText.textContent = `Selected file: ${fileInput.files[0].name}`;
+        } else {
+            fileInputText.textContent = '';
+        }
+    });
+
+    uploadForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(uploadForm);
+        fileInputText.textContent = 'Analyzing...';
+
+        fetch('{{ url_for("detect_fire") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result) {
+                fileInputText.textContent = data.result;
+            } else {
+                fileInputText.textContent = data.error || 'An unknown error occurred.';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            fileInputText.textContent = 'Upload failed. See console for details.';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Wachay{% endblock %}
+
+{% block content %}
+    <div class="login">
+        <img src="{{ url_for('static', filename='img/Img_4.jpg') }}" alt="login_bg" class="login__img">
+
+        <form action="{{ url_for('login') }}" method="POST" class="login__form">
+            <h1 class="login__title">Login</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="login__content">
+                <div class="login__box">
+                    <i class="ri-user-3-line login__icon"></i>
+
+                    <div class="login__box-input">
+                        <input type="text" required name="username" class="login__input" placeholder="">
+                        <label for="" class="login__label">Email</label>
+                    </div>
+                </div>
+                <div class="login__box">
+                    <i class="ri-lock-2-line login__icon"></i>
+
+                    <div class="login__box-input">
+                        <input type="password" required name="password" id="login-pass" class="login__input"
+                               placeholder="">
+                        <label for="" class="login__label">Password</label>
+                        <i class="ri-eye-off-line login__eye" id="login-eye"></i>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Login" class="login__button">
+            <p class="login__register">Don't have an account? <a href="#">Register</a></p>
+        </form>
+    </div>
+{% endblock %}
