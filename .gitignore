@@ -2,6 +2,8 @@
 /Branding_folder/
 /previous_version/
 /Frontend Structure.md
+backend/assets/
+assets/
 
 # Virtual environments
 .venv/
@@ -36,8 +38,9 @@ build/
 *.joblib
 *.zip
 backend/models/
-backend/assets/img/
 backend/Test_Data/
+models/
+Test_Data/
 
 # IDE & Editor files
 .idea/
