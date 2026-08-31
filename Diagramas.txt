@@ -1,0 +1,173 @@
+# =============================================================================
+# WACHAY - DIAGRAMAS DE FLUJO Y ARQUITECTURA DE SOFTWARE (V2.0)
+# =============================================================================
+# Proyecto: Wildfire Alert & Cochabamba Heat Analysis System
+# Versión: 2.0 (FastAPI + React + React Native)
+# =============================================================================
+
+# =============================================================================
+# 1. ARQUITECTURA GENERAL DEL SISTEMA (V2.0)
+# =============================================================================
+
+```mermaid
+graph TD
+    %% Componentes
+    subgraph Cliente Movil [App Movil - React Native & Expo]
+        CM_UI[Pantallas Expo]
+        CM_AS[Persistencia local - AsyncStorage]
+        CM_IM[Compresion - expo-image-manipulator]
+        CM_LOC[GPS - expo-location]
+    end
+
+    subgraph Cliente Web [App Web - React 19 & Vite]
+        CW_UI[Dashboard Ranger / Admin]
+        CW_MAP[Monitoreo - Leaflet Map]
+        CW_KPI[Graficos - Chart.js nativo]
+        CW_TR[Traductor - translations.ts]
+    end
+
+    subgraph Servidor Backend [FastAPI Backend - Python]
+        API_AUTH[Router: /api/auth]
+        API_REP[Router: /api/reports]
+        API_MOB[Router: /api/mobile]
+        API_ML[Router: /api/ml]
+        
+        DB_SQLITE[(SQLite WAL Mode)]
+        
+        subgraph Capa Inteligencia Artificial
+            ML_CNN[CNN MobileNetV2 - Fuego]
+            ML_RF[Random Forest - Clima/Riesgo]
+            ML_RAG[TF-IDF Passage Retriever]
+        end
+        
+        subgraph Servicios Externos
+            EXT_OPENWEATHER[API OpenWeatherMap]
+            EXT_GEMINI[API Gemini AI]
+            EXT_TWILIO[API Twilio WhatsApp]
+            EXT_TELEGRAM[Telegram Bot API]
+        end
+    end
+
+    %% Relaciones
+    CM_UI -->|1. Geolocaliza| CM_LOC
+    CM_UI -->|2. Toma Foto y Comprime| CM_IM
+    CM_UI -->|3. Guarda Cola Offline| CM_AS
+    CM_UI -->|4. Registro /api/mobile/register_report| API_MOB
+    CM_UI -->|5. Estado /api/mobile/report_status| API_MOB
+
+    CW_UI -->|Autenticacion /api/auth/login| API_AUTH
+    CW_UI -->|CRUD & Exportaciones /api/reports| API_REP
+    CW_UI -->|IA e Inferencia /api/ml| API_ML
+
+    API_MOB --> DB_SQLITE
+    API_REP --> DB_SQLITE
+    API_AUTH --> DB_SQLITE
+
+    API_REP -->|Notificacion Asincrona| EXT_TWILIO
+    API_REP -->|Notificacion Asincrona| EXT_TELEGRAM
+    API_REP -->|Telemetria Clima| EXT_OPENWEATHER
+
+    API_ML -->|Inferencia CNN| ML_CNN
+    API_ML -->|Prediccion Climatica| ML_RF
+    API_ML -->|RAG Contexto Local| ML_RAG
+    ML_RAG -->|Prompt Inyectado| EXT_GEMINI
+```
+
+---
+
+# =============================================================================
+# 2. DIAGRAMA DE SECUENCIA: REGISTRO Y DETECCIÓN EN CAMPO (APLICACIÓN MÓVIL)
+# =============================================================================
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Ciudadano as Ciudadano (App Movil)
+    participant AppMovil as App React Native (Expo)
+    participant Backend as FastAPI Backend
+    participant WeatherAPI as OpenWeatherMap API
+    participant Notif as Servicios Mensajeria (Twilio/Telegram)
+
+    Ciudadano->>AppMovil: Abre Formulario de Denuncia
+    AppMovil->>AppMovil: Obtiene GPS (expo-location)
+    AppMovil->>AppMovil: Abre Camara y toma fotografia
+    AppMovil->>AppMovil: Comprime foto a 150 KB (expo-image-manipulator)
+    
+    alt Con Conexion a Internet
+        AppMovil->>Backend: POST /api/mobile/register_report (JSON + photo_base64)
+        Backend->>WeatherAPI: Solicita Clima en coordenadas (Lat/Lon)
+        WeatherAPI-->>Backend: Temperatura, Viento, Humedad
+        Backend->>Backend: Guarda en SQLite (Estado: Citizen_Pending)
+        Backend-->>AppMovil: Retorna tracking_code (Ej: WCY78349)
+        AppMovil-->>Ciudadano: Muestra pantalla de exito con codigo de rastreo
+    else Sin Conexion a Internet (Modo Offline)
+        AppMovil->>AppMovil: Encola reporte en AsyncStorage local
+        AppMovil-->>Ciudadano: Alerta "Sin Red: Reporte guardado localmente"
+        Note over Ciudadano, AppMovil: Al recuperar cobertura de internet...
+        Ciudadano->>AppMovil: Clic en "[Sincronizar]"
+        AppMovil->>Backend: Sube lote de reportes encolados
+        Backend-->>AppMovil: Retorna codigos de seguimiento generados
+    end
+```
+
+---
+
+# =============================================================================
+# 3. DIAGRAMA DE SECUENCIA: APROBACIÓN Y ALERTAS EN LA WEB (ADMINISTRADOR)
+# =============================================================================
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as Administrador (Web)
+    participant WebApp as Web React 19 (Vite)
+    participant Backend as FastAPI Backend
+    participant DB as SQLite (WAL)
+    participant Notif as Servicios Mensajeria (Twilio/Telegram)
+
+    Admin->>WebApp: Inicia sesion (/api/auth/login)
+    WebApp-->>Admin: Muestra Panel de Administracion
+    Admin->>WebApp: Accede a pestaña "Reportes Ciudadanos Pendientes"
+    WebApp->>Backend: GET /api/reports/ (Filtra Citizen_Pending)
+    Backend-->>WebApp: Retorna lista con fotos Base64 y datos
+    Admin->>WebApp: Selecciona reporte y presiona "Aprobar"
+    WebApp->>Backend: PUT /api/reports/{id} (status = First_State)
+    Backend->>DB: Actualiza estado del reporte
+    
+    Note over Backend, Notif: Ejecucion asincrona via BackgroundTasks (FastAPI)
+    Backend->>Notif: Dispara mensaje Twilio WhatsApp a Rangers
+    Backend->>Notif: Dispara mensaje Telegram Bot a canal SERNAP
+    
+    Backend-->>WebApp: HTTP 200 OK (Reporte Aprobado)
+    WebApp-->>Admin: Actualiza lista y remueve reporte de la bandeja
+```
+
+---
+
+# =============================================================================
+# 4. DIAGRAMA DE SECUENCIA: ASISTENTE DE EMERGENCIAS (RAG)
+# =============================================================================
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Guardaparques as Ranger (Web)
+    participant WebApp as Web React
+    participant Backend as FastAPI Backend
+    participant RAG as RAG Service (TF-IDF)
+    participant Gemini as Gemini AI API
+
+    Guardaparques->>WebApp: Escribe pregunta (Ej: "¿Como actuar ante fuego forestal en Tunari?")
+    WebApp->>Backend: POST /api/ml/ask-ai (message)
+    Backend->>RAG: Extrae pasajes relevantes del manual SERNAP
+    RAG-->>Backend: Fragmentos de contingencia localizados
+    
+    alt Backend Online (Conexion a Google Cloud)
+        Backend->>Gemini: Envia prompt (Pasajes de contexto + Mensaje original)
+        Gemini-->>Backend: Genera respuesta enriquecida sin alucinaciones
+        Backend-->>WebApp: Retorna respuesta de Gemini (Modo: nubarron/gemini)
+    else Backend Offline (Sin conexion a Internet)
+        Backend-->>WebApp: Retorna los pasajes directos del manual (Modo: local/TF-IDF)
+    end
+    WebApp-->>Guardaparques: Muestra respuesta en chat
+```
