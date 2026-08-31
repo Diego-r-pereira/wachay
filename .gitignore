@@ -1,143 +1,67 @@
-# ============================================
-# ARCHIVOS DE ENTORNO Y CONFIGURACIÓN SENSIBLE
-# ============================================
+﻿# User-requested folder/file exclusions
+/Branding_folder/
+/previous_version/
+/Frontend Structure.md
 
-# Variables de entorno
-.env
-.env.local
-.env.production
-.env.development
-
-# Configuración sensible
-config.py
-fireSet.py
-reset.txt
-
-# Archivos de prompt e instrucciones
-prompt.md
-PROJECT_DETAILS.md
-
-
-# ============================================
-# ENTORNOS VIRTUALES PYTHON
-# ============================================
+# Virtual environments
 .venv/
 venv/
 env/
-ENV/
-virtualenv/
+*/.venv/
 
-
-# ============================================
-# BYTECODE Y CACHÉ DE PYTHON
-# ============================================
-__pycache__/
+# Python bytecode & cache
+**/__pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
+*.ipynb_checkpoints
 
+# Node & Package Managers
+node_modules/
+*/node_modules/
+.npm/
+.yarn/
 
-# ============================================
-# ARCHIVOS DE IDE/EDITORES
-# ============================================
-# PyCharm/IntelliJ
+# Build outputs
+dist/
+*/dist/
+build/
+*/build/
+.expo/
+*/.expo/
+*.tsbuildinfo
+
+# Heavy ML Models & Datasets & Zips
+*.h5
+*.pkl
+*.joblib
+*.zip
+backend/models/
+backend/assets/img/
+backend/Test_Data/
+
+# IDE & Editor files
 .idea/
-*.iws
-*.iml
-*.ipr
-
-# VS Code
 .vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# Otros editores
 *.swp
 *.swo
-*~
+*.iml
 
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+*.env
 
-# ============================================
-# NOTEBOOKS Y DATOS TEMPORALES
-# ============================================
-# Notebooks (excepto si quieres versionarlos)
-*.ipynb
-model.google_colab.ipynb
-
-# Checkpoints de notebooks
-.ipynb_checkpoints/
-
-
-# ============================================
-# INSTANCIAS Y DATOS LOCALES
-# ============================================
-# Instancia de Flask (base de datos local, etc.)
+# Databases & Runtime Uploads
 instance/
-
-
-# ============================================
-# MODELOS ENTRENADOS Y DATOS PESADOS
-# ============================================
-# Modelos de ML (si son grandes, mejor subirlos aparte)
-models/
-training_scripts/
-
-# Assets grandes (si son estáticos pesados)
-assets/
-
-
-# ============================================
-# ARCHIVOS DEL SISTEMA
-# ============================================
-# macOS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Linux
-*~
-
-
-# ============================================
-# LOGS Y ARCHIVOS TEMPORALES
-# ============================================
+*.sqlite
+*.sqlite3
+**/instance/
+**/uploads/
+uploads/
 *.log
-logs/
 
-
-# ============================================
-# DISTRIBUCIONES Y PAQUETES
-# ============================================
-# Distribuciones/instalaciones de Python
-*.egg
-*.egg-info/
-dist/
-build/
-eggs/
-parts/
-var/
-sdist/
-develop-eggs/
-.installed.cfg
-lib/
-lib64/
-
-
-# ============================================
-# TESTING Y COVERAGE
-# ============================================
-.coverage
-.pytest_cache/
-htmlcov/
-.tox/
-.cache
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini

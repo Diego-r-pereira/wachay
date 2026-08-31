@@ -1,0 +1,131 @@
+/* Inherit base styles for consistency */
+@import url('styles.css');
+
+.projections__section {
+    padding: 2rem;
+    background-color: #f4f7f6;
+    min-height: 100vh;
+}
+
+.projections__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.projections__header {
+    text-align: left;
+}
+
+.projections__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+/* Card styles to match the application's UI */
+.projections__card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: relative; /* Create a stacking context */
+    z-index: 1; /* Ensure it's below the main navbar (z-index: 100) */
+}
+
+.projections__card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.projections__card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.projections__card-content {
+    padding: 1.5rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.projections__card-content p {
+    margin-bottom: 1rem;
+}
+
+/* Button style */
+.projections__button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.projections__button:hover {
+    background-color: #0056b3;
+}
+
+.projections__button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+
+/* Map container styles for 1:1 aspect ratio and centering */
+.projections__map-container {
+    max-width: 700px; /* Or adjust as needed */
+    width: 100%;
+    margin: 1.5rem auto; /* Center the map container */
+    aspect-ratio: 1 / 1; /* Modern CSS for 1:1 aspect ratio */
+    border-radius: 8px;
+    overflow: hidden; /* Ensures map corners are rounded */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+/* Summary and Top 5 List Styles */
+.projections__summary {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.projections__top-locations {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.projections__top-locations h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.projections__top-locations ol {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.projections__top-locations li {
+    padding: 0.25rem 0;
+    color: #555;
+}
